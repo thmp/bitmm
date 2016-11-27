@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>bitmm</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/static/style.css" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta charset="utf-8" /> 
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">bitmm</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="">Monitoring</a></li>
+			<li><a href="">Configuration</a></li>
+			<li><a href="">Reporting</a></li>
+		</ul>
+		<div class="navbar-form navbar-right">
+			<div class="form-group">
+				<select id="polling_interval" class="form-control">
+					<option value="5000">5s</option>
+					<option value="10000">10s</option>
+					<option value="15000">15s</option>
+					<option value="30000">30s</option>
+					<option value="60000" selected>1m</option>
+					<option value="300000">5m</option>
+					<option value="1000000000">off</option>
+				</select>
+			</div>
+		</div>
+		<div class="navbar-text navbar-right" style="padding-right:15px">
+			<small id="updating">updating...</small>
+		</div>
+	</div>
+</nav>
+
+<div class="container-fluid container-main">
+	<div class="row heightfull">
+		<div class="col-sm-10 heightfull">
+
+	<div class="row">
+		<div class="col-sm-6 nomargin">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Account
+				</div>
+				<div class="panel-body" style="padding-top:15px">
+					<div class="col-sm-6">
+						<strong>BTC <span id="account_btc">0.0000</span></strong> | 
+						<strong>EUR <span id="account_eur">0.00</span></strong><br />
+						<small>Total BTC <span id="account_total_btc">0.0000</span> | EUR <span id="account_total_eur">0.00</span></small>
+					</div>
+					<div class="col-sm-6">
+						<strong>Last Trade EUR <span id="last_trade_price">0.00</span></strong><br /> 
+						<small>24h Trade Volume BTC <span id="total_trade_volume">0.0000</span></small>
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="col-sm-6">
+						<strong>Intraday Saldo BTC <span id="trades_balance_btc_day">0.0000</span></strong> | <strong>EUR <span id="trades_balance_eur_day">0.0000</span></strong><br />
+						<small>Intraday Volume BTC <span id="trades_volume_btc_day">0.00</span> | EUR <span id="trades_volume_eur_day">0.00</span><br /><span id="trades_count_day">0</span> Trades</small>
+					</div>
+					<div class="col-sm-6">
+						<strong>24h Saldo BTC <span id="trades_balance_btc">0.0000</span></strong> | <strong>EUR <span id="trades_balance_eur">0.0000</span></strong><br />
+						<small>24h Volume BTC <span id="trades_volume_btc">0.00</span> | EUR <span id="trades_volume_eur">0.00</span><br /><span id="trades_count">0</span> Trades</small>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 borderleft">
+			<div id="chart" style="height: 250px; width:100%"></div>
+		</div>
+	</div>
+	
+
+	<div class="row bordertop container-tables">
+		<div class="col-sm-6 nomargin heightfull">
+			<div class="panel panel-default heightfull">
+				<div class="panel-heading">
+					Orderbook
+				</div>
+				<div class="panel-body nomargin heightfull-panel-body">
+					<div class="spread">Mid: <span id="mid">0.00</span> | Spread: <span id="spread">0.00</span></div>
+					<div class="row table-orderbook">
+						<div class="col-sm-6 nomarginright">
+							<strong style="text-align:center;display:block">BUY</strong>
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th>Bid</th><th>Size</th><th>Own</th>
+									</tr>
+								</thead>
+								<tbody id="orderbook_bids">
+									<tr>
+										<td><span class="inv">0</span>0.<span>00</span></td><td>0.00<span>00</span></td><td>0.00<span>00</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-sm-6 nomarginleft borderleft">
+							<strong style="text-align:center;display:block">SELL</strong>
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th>Ask</th><th>Size</th><th>Own</th>
+									</tr>
+								</thead>
+								<tbody id="orderbook_asks">
+									<tr>
+										<td><span class="inv">0</span>0.<span>00</span></td><td>0.00<span>00</span></td><td>0.00<span>00</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 nomargin borderleft heightfull">
+			<div class="panel panel-default table-orders">
+				<div class="panel-heading">
+					Orders
+				</div>
+				<div class="panel-body nomargin table-right">
+					<table class="table table-condensed table-5">
+						<thead>
+							<tr>
+								<th>Side</th><th>Price</th><th>Size</th><th>Filled</th><th>Time</th>
+							</tr>
+						</thead>
+						<tbody id="orders">
+							<tr>
+								<td class="sell">SELL</td><td>0.00<span>00</span></td><td>0.00</td><td><span>0.0000</span></td><td>now</td>
+							</tr>
+							<tr>
+								<td class="sell">SELL</td><td>0.00<span>00</span></td><td>0.00</td><td><span>0.0000</span></td><td>now</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="panel panel-default table-trades">
+				<div class="panel-heading bordertop">
+					Trades
+				</div>
+				<div class="panel-body nomargin table-right">
+					<table class="table table-condensed table-5">
+						<thead>
+							<tr>
+								<th>Side</th><th>Price</th><th>Size</th><th>Fee</th><th>Time</th>
+							</tr>
+						</thead>
+						<tbody id="trades">
+							<tr>
+								<td class="buy">BUY</td><td>0.00<span>00</span></td><td>0.00</td><td><span>0.0000</span></td><td>now</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		</div>
+
+		<div class="col-sm-2 nomargin borderleft heightfull">
+			<div class="panel panel-default heightfull">
+				<div class="panel-heading">
+					Market Trades
+				</div>
+				<div class="panel-body nomargin table-right">
+					<table class="table table-condensed table-3">
+						<thead>
+							<tr>
+								<th>Price</th><th>Size</th><th>Time</th>
+							</tr>
+						</thead>
+						<tbody id="markettrades">
+							<tr>
+								<td class="sell">0.00</td><td>0.00<span>00</span></td><td>now</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+<script src="/static/app.js"></script>
+
+</body>
+</html>
